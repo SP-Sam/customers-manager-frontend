@@ -8,9 +8,11 @@ export const StyledButton = styled.button<{ outlined?: true }>`
   transition: 150ms;
   border-radius: 0.3rem;
   font-size: 22px;
+  max-height: 2.8125rem;
 
   &:hover {
     background-color: ${({ outlined }) => (outlined ? '#e48900' : '#ca7900')};
     color: #fff;
+    cursor: pointer;
   }
 `;

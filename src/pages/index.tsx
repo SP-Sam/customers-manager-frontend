@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Head from 'next/head';
 
-import { AppDispatch } from '@/store';
+import { AppDispatch, RootState } from '@/store';
 import { fetchCustomers } from '@/store/customers';
 import { NextPage } from 'next';
 import Link from 'next/link';
@@ -13,10 +13,13 @@ import {
   StyledPageHeaderButton,
   StyledPageTitle,
 } from '@/components/PageHeader/styles';
-import CustomButton from '@/components/CustomButton';
+import CustomerCard from '@/components/CustomerCard';
 
 const Home: NextPage = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { data: customers } = useSelector(
+    (state: RootState) => state.customers
+  );
 
   useEffect(() => {
     dispatch(fetchCustomers({}));
@@ -41,11 +44,17 @@ const Home: NextPage = () => {
         </StyledPageHeaderButton>
       </PageHeader>
 
-      <CustomButton
-        text="Editar"
-        onClick={() => console.log('Editar')}
-        outlined
-      />
+      {customers.map(({ id, name, email, taxId, phone, status }) => (
+        <CustomerCard
+          key={id}
+          id={id}
+          name={name}
+          email={email}
+          taxId={taxId}
+          phone={phone}
+          status={status}
+        />
+      ))}
     </Layout>
   );
 };
