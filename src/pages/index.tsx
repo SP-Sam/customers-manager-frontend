@@ -7,6 +7,13 @@ import { fetchCustomers } from '@/store/customers';
 import { NextPage } from 'next';
 import Link from 'next/link';
 import Layout from '@/components/layout';
+import PageHeader from '@/components/PageHeader';
+import {
+  StyledPageDescription,
+  StyledPageHeaderButton,
+  StyledPageTitle,
+} from '@/components/PageHeader/styles';
+import CustomButton from '@/components/CustomButton';
 
 const Home: NextPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,10 +28,24 @@ const Home: NextPage = () => {
         <title>Clientes | Customers Manager</title>
       </Head>
 
-      <h1>Home</h1>
+      <PageHeader>
+        <div>
+          <StyledPageTitle>Listagem de usuários</StyledPageTitle>
+          <StyledPageDescription>
+            Escolha um cliente para visualizar os detalhes
+          </StyledPageDescription>
+        </div>
 
-      <Link href="/customer/create">Cadastrar Cliente</Link>
-      <Link href="/customer/edit/1">Editar Cliente</Link>
+        <StyledPageHeaderButton href="/customer/create">
+          Novo cliente
+        </StyledPageHeaderButton>
+      </PageHeader>
+
+      <CustomButton
+        text="Editar"
+        onClick={() => console.log('Editar')}
+        outlined
+      />
     </Layout>
   );
 };

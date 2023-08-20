@@ -1,3 +1,9 @@
+import PageHeader from '@/components/PageHeader';
+import {
+  StyledPageTitle,
+  StyledPageDescription,
+  StyledPageHeaderButton,
+} from '@/components/PageHeader/styles';
 import Layout from '@/components/layout';
 import { NextPage } from 'next';
 import Head from 'next/head';
@@ -10,7 +16,14 @@ const CreateCustomer: NextPage = () => {
         <title>Cadastrar Cliente | Customers Manager</title>
       </Head>
 
-      <div>CreateCustomer</div>
+      <PageHeader>
+        <div>
+          <StyledPageTitle>Novo usuário</StyledPageTitle>
+          <StyledPageDescription>
+            Informe os campos a seguir para criar um novo usuário
+          </StyledPageDescription>
+        </div>
+      </PageHeader>
     </Layout>
   );
 };

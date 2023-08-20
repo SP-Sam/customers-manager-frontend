@@ -8,6 +8,7 @@ export const MainHeader = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #bebebe;
 `;
 
 export const HomeLink = styled(Link)`
