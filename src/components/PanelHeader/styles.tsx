@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const PanelHeader = styled.section`
   width: 100%;
   max-width: 64rem;
-  height: 9.375rem;
+  min-height: 8rem;
   display: flex;
   align-items: flex-end;
   padding-bottom: 1.5rem;

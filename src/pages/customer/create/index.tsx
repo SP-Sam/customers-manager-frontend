@@ -1,13 +1,14 @@
+import { NextPage } from 'next';
+import Head from 'next/head';
+import React from 'react';
+
 import PageHeader from '@/components/PageHeader';
 import {
   StyledPageTitle,
   StyledPageDescription,
-  StyledPageHeaderButton,
 } from '@/components/PageHeader/styles';
 import Layout from '@/components/layout';
-import { NextPage } from 'next';
-import Head from 'next/head';
-import React from 'react';
+import FormContainer from '@/components/FormContainer';
 
 const CreateCustomer: NextPage = () => {
   return (
@@ -24,6 +25,8 @@ const CreateCustomer: NextPage = () => {
           </StyledPageDescription>
         </div>
       </PageHeader>
+
+      <FormContainer />
     </Layout>
   );
 };

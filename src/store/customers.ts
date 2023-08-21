@@ -1,12 +1,14 @@
 import { api } from '@/services/api';
-import { CustomerStoreTypes, CustomerTypes } from '@/types';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  CustomerStoreTypes,
+  CustomerTypes,
+  ErrorCallbackTypes,
+  FormDataTypes,
+} from '@/types';
+import { Dispatch, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-interface DataParams {
-  page?: number;
-  perPage?: number;
-  searchTerm?: string;
-  type?: string;
+interface Redux {
+  dispatch: Dispatch<any>;
 }
 
 const initialState: CustomerStoreTypes = {
@@ -17,23 +19,54 @@ const initialState: CustomerStoreTypes = {
     email: '',
     taxId: '',
     phone: '',
-    status: null,
+    status: '',
   },
+  created: false,
+  updated: false,
 };
+
+export const successCreate = createAsyncThunk(
+  'customers/successCreate',
+  async (success: boolean) => {
+    return success;
+  }
+);
 
 export const createCustomer = createAsyncThunk(
   'customers/createCustomer',
-  async (data: CustomerTypes) => {
-    const response = await api.post('/customers', data);
+  async (
+    {
+      formData,
+      errorCallback,
+    }: {
+      formData: FormDataTypes;
+      errorCallback?: ErrorCallbackTypes;
+    },
+    { dispatch }: Redux
+  ) => {
+    try {
+      dispatch(successCreate(false));
 
-    return response.data;
+      await api.post('/customers', formData);
+
+      dispatch(successCreate(true));
+      alert('Cliente cadastrado com sucesso!');
+    } catch (e: any) {
+      if (errorCallback) {
+        if (String(e.response.data.error).includes('email')) {
+          errorCallback(1);
+        } else {
+          errorCallback(2);
+        }
+      }
+    }
   }
 );
 
 export const fetchCustomers = createAsyncThunk(
   'customers/fetchCustomers',
-  async ({ page = 1, perPage = 20 }: DataParams) => {
-    const response = await api.get('/customers', { params: { page, perPage } });
+  async () => {
+    const response = await api.get('/customers');
 
     return response.data;
   }
@@ -79,6 +112,10 @@ export const customersSlice = createSlice({
 
     builder.addCase(fetchCustomerById.fulfilled, (state, action) => {
       state.customerToUpdate = action.payload;
+    });
+
+    builder.addCase(successCreate.fulfilled, (state, action) => {
+      state.created = action.payload;
     });
   },
 });

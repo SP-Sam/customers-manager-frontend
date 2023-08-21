@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { NextPage } from 'next';
 import Head from 'next/head';
 
 import { AppDispatch, RootState } from '@/store';
-import { fetchCustomers } from '@/store/customers';
-import { NextPage } from 'next';
-import Link from 'next/link';
+import { fetchCustomers, successCreate } from '@/store/customers';
 import Layout from '@/components/layout';
 import PageHeader from '@/components/PageHeader';
 import {
@@ -14,6 +13,11 @@ import {
   StyledPageTitle,
 } from '@/components/PageHeader/styles';
 import CustomerCard from '@/components/CustomerCard';
+import {
+  CardsContainer,
+  CustomersCountWrapper,
+  NoCustomersContainer,
+} from '@/components/CustomerCard/styles';
 
 const Home: NextPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,7 +26,8 @@ const Home: NextPage = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchCustomers({}));
+    dispatch(fetchCustomers());
+    dispatch(successCreate(false));
   }, [dispatch]);
 
   return (
@@ -44,17 +49,28 @@ const Home: NextPage = () => {
         </StyledPageHeaderButton>
       </PageHeader>
 
-      {customers.map(({ id, name, email, taxId, phone, status }) => (
-        <CustomerCard
-          key={id}
-          id={id}
-          name={name}
-          email={email}
-          taxId={taxId}
-          phone={phone}
-          status={status}
-        />
-      ))}
+      <CardsContainer>
+        {customers.length === 0 && (
+          <NoCustomersContainer>
+            <h3>Não há clientes cadastrados</h3>
+          </NoCustomersContainer>
+        )}
+        {customers.map(({ id, name, email, taxId, phone, status }) => (
+          <CustomerCard
+            key={id}
+            id={id}
+            name={name}
+            email={email}
+            taxId={taxId}
+            phone={phone}
+            status={status}
+          />
+        ))}
+      </CardsContainer>
+
+      <CustomersCountWrapper>
+        Exibindo {customers.length} clientes
+      </CustomersCountWrapper>
     </Layout>
   );
 };

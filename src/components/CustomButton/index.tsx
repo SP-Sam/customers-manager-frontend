@@ -4,7 +4,7 @@ import { StyledButton } from './styles';
 type Props = {
   text: string;
   outlined?: true;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 const CustomButton: React.FC<Props> = ({ text, outlined, onClick }) => {
@@ -15,7 +15,7 @@ const CustomButton: React.FC<Props> = ({ text, outlined, onClick }) => {
           {text}
         </StyledButton>
       ) : (
-        <StyledButton onClick={onClick}>{text}</StyledButton>
+        <StyledButton type="submit">{text}</StyledButton>
       )}
     </>
   );

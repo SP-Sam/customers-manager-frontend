@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Link from 'next/link';
 
 export const MainHeader = styled.header`
-  height: 5rem;
+  min-height: 5rem;
   width: 100vw;
   background-color: #2b2b2b;
   display: flex;

@@ -7,7 +7,7 @@ export const StyledPageHeader = styled.section`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 1.5rem 1.5rem 0;
+  padding: 1.8rem 1.5rem 1.8rem 0;
 `;
 
 export const StyledPageTitle = styled.p`
@@ -24,7 +24,7 @@ export const StyledPageDescription = styled.p`
 
 export const StyledPageHeaderButton = styled(Link)<{ disable?: true }>`
   background-color: ${({ disable }) => (disable ? '#9c9c9c' : '#e48900')};
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   text-decoration: none;
   border-radius: 0.3rem;
   color: #fff;
