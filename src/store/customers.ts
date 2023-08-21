@@ -1,3 +1,4 @@
+import { Status } from '@/enum';
 import { api } from '@/services/api';
 import {
   CustomerStoreTypes,
@@ -19,7 +20,7 @@ const initialState: CustomerStoreTypes = {
     email: '',
     taxId: '',
     phone: '',
-    status: '',
+    status: Status.WAITING_FOR_ACTIVATION,
   },
   created: false,
   updated: false,
@@ -27,6 +28,13 @@ const initialState: CustomerStoreTypes = {
 
 export const successCreate = createAsyncThunk(
   'customers/successCreate',
+  async (success: boolean) => {
+    return success;
+  }
+);
+
+export const successUpdate = createAsyncThunk(
+  'customers/successUpdate',
   async (success: boolean) => {
     return success;
   }
@@ -50,7 +58,7 @@ export const createCustomer = createAsyncThunk(
       await api.post('/customers', formData);
 
       dispatch(successCreate(true));
-      alert('Cliente cadastrado com sucesso!');
+      alert('Cliente cadastrado(a) com sucesso!');
     } catch (e: any) {
       if (errorCallback) {
         if (String(e.response.data.error).includes('email')) {
@@ -83,12 +91,41 @@ export const fetchCustomerById = createAsyncThunk(
 
 export const updateCustomer = createAsyncThunk(
   'customers/updateCustomer',
-  async (data: CustomerTypes) => {
-    const { id } = data;
+  async (
+    {
+      formData,
+      errorCallback,
+    }: {
+      formData: CustomerTypes;
+      errorCallback?: ErrorCallbackTypes;
+    },
+    { dispatch }: Redux
+  ) => {
+    try {
+      dispatch(successUpdate(false));
+      console.log({ formData });
 
-    const response = await api.patch(`/customers/${id}`);
+      const { id, name, email, taxId, phone, status } = formData;
 
-    return response.data;
+      await api.patch(`/customers/${id}`, {
+        name,
+        email,
+        taxId,
+        phone,
+        status,
+      });
+
+      dispatch(successUpdate(true));
+      alert('Cliente atualizado(a) com sucesso!');
+    } catch (e: any) {
+      if (errorCallback) {
+        if (String(e.response.data.error).includes('email')) {
+          errorCallback(1);
+        } else {
+          errorCallback(2);
+        }
+      }
+    }
   }
 );
 
@@ -116,6 +153,10 @@ export const customersSlice = createSlice({
 
     builder.addCase(successCreate.fulfilled, (state, action) => {
       state.created = action.payload;
+    });
+
+    builder.addCase(successUpdate.fulfilled, (state, action) => {
+      state.updated = action.payload;
     });
   },
 });

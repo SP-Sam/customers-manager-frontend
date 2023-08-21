@@ -38,7 +38,6 @@ const formSchema = yup.object({
     .string()
     .length(MOBILE_LENGTH, TAX_ID_LENGTH_MESSAGE)
     .required(REQUIRED_MESSAGE),
-  status: yup.string().min(1, STATUS_MESSAGE).required(REQUIRED_MESSAGE),
 });
 
 type Props = {
@@ -48,7 +47,9 @@ type Props = {
 const FormContainer: React.FC<Props> = ({ customerToUpdate }) => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const { created } = useSelector((state: RootState) => state.customers);
+  const { created, updated } = useSelector(
+    (state: RootState) => state.customers
+  );
 
   const {
     register,
@@ -63,7 +64,18 @@ const FormContainer: React.FC<Props> = ({ customerToUpdate }) => {
 
   const onSubmit = (formData: FormDataTypes | CustomerTypes) => {
     if (customerToUpdate) {
-      dispatch(updateCustomer(formData as CustomerTypes));
+      dispatch(
+        updateCustomer({
+          formData: { ...formData, id: +router.query.id! } as CustomerTypes,
+          errorCallback: (status: number) => {
+            if (status === 1) {
+              setError('email', { message: EMAIL_CONFLICT_MESSAGE });
+            } else {
+              setError('taxId', { message: TAX_ID_CONFLICT_MESSAGE });
+            }
+          },
+        })
+      );
     } else {
       dispatch(
         createCustomer({
@@ -81,10 +93,10 @@ const FormContainer: React.FC<Props> = ({ customerToUpdate }) => {
   };
 
   useEffect(() => {
-    if (created === true) {
+    if (created === true || updated === true) {
       router.push('/');
     }
-  }, [created]);
+  }, [created, updated]);
 
   return (
     <StyledFormContainer>
@@ -97,7 +109,7 @@ const FormContainer: React.FC<Props> = ({ customerToUpdate }) => {
               placeholder="Nome"
               {...register('name')}
               onChange={onChange}
-              value={value}
+              value={value || customerToUpdate?.name}
             />
           )}
         />
@@ -111,7 +123,7 @@ const FormContainer: React.FC<Props> = ({ customerToUpdate }) => {
               placeholder="E-mail"
               {...register('email')}
               onChange={onChange}
-              value={value}
+              value={value || customerToUpdate?.email}
             />
           )}
         />
@@ -126,7 +138,7 @@ const FormContainer: React.FC<Props> = ({ customerToUpdate }) => {
               placeholder="CPF"
               {...register('taxId')}
               onChange={onChange}
-              value={value}
+              value={value || customerToUpdate?.taxId}
             />
           )}
         />
@@ -141,7 +153,7 @@ const FormContainer: React.FC<Props> = ({ customerToUpdate }) => {
               placeholder="Telefone"
               {...register('phone')}
               onChange={onChange}
-              value={value}
+              value={value || customerToUpdate?.phone}
             />
           )}
         />
@@ -154,7 +166,7 @@ const FormContainer: React.FC<Props> = ({ customerToUpdate }) => {
             <StyledSelect
               {...register('status')}
               onChange={onChange}
-              value={value}
+              value={value || customerToUpdate?.status}
             >
               <option value="" selected disabled>
                 Status
@@ -171,7 +183,7 @@ const FormContainer: React.FC<Props> = ({ customerToUpdate }) => {
         {errors.status && <ErrorSpan>{errors.status.message}</ErrorSpan>}
 
         <FlexWrapper>
-          <CustomButton text="Criar" />
+          <CustomButton text={customerToUpdate ? 'Atualizar' : 'Criar'} />
           <CustomButton
             text="Voltar"
             onClick={() => router.replace('/')}

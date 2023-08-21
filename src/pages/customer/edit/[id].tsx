@@ -6,11 +6,17 @@ import PageHeader from '@/components/PageHeader';
 import {
   StyledPageTitle,
   StyledPageDescription,
-  StyledPageHeaderButton,
 } from '@/components/PageHeader/styles';
 import Layout from '@/components/layout';
+import FormContainer from '@/components/FormContainer';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 const EditCustomer: NextPage = () => {
+  const { customerToUpdate } = useSelector(
+    (state: RootState) => state.customers
+  );
+
   return (
     <Layout>
       <Head>
@@ -24,11 +30,9 @@ const EditCustomer: NextPage = () => {
             Modifique as informações do cliente no formulário abaixo
           </StyledPageDescription>
         </div>
-
-        <StyledPageHeaderButton href="#" disable>
-          Desativar
-        </StyledPageHeaderButton>
       </PageHeader>
+
+      <FormContainer customerToUpdate={customerToUpdate} />
     </Layout>
   );
 };

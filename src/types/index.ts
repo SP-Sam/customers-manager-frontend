@@ -5,7 +5,7 @@ export type FormDataTypes = {
   email: string;
   taxId: string;
   phone: string;
-  status: Status | string;
+  status?: Status;
 };
 
 export type CustomerTypes = {

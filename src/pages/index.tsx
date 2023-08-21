@@ -4,7 +4,11 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 
 import { AppDispatch, RootState } from '@/store';
-import { fetchCustomers, successCreate } from '@/store/customers';
+import {
+  fetchCustomers,
+  successCreate,
+  successUpdate,
+} from '@/store/customers';
 import Layout from '@/components/layout';
 import PageHeader from '@/components/PageHeader';
 import {
@@ -28,6 +32,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     dispatch(fetchCustomers());
     dispatch(successCreate(false));
+    dispatch(successUpdate(false));
   }, [dispatch]);
 
   return (

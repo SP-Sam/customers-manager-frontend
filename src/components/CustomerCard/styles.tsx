@@ -43,7 +43,8 @@ export const StyledStatusDot = styled.div<{ bgColor: string }>`
 `;
 
 export const CardsContainer = styled.section`
-  width: 64rem;
+  width: 100%;
+  max-width: 64rem;
   height: calc(100vh - 26rem);
   overflow-y: scroll;
   display: flex;
